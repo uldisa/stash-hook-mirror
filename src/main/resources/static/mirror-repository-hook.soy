@@ -6,31 +6,33 @@
  */
 {template .view}
 
-    // Always add one subview
-    {call .subview data="all"}
-        {param index: 0 /}
-    {/call}
+    <div class="et-mirror-contents">
+      // Always add one subview
+      {call .subview data="all"}
+          {param index: 0 /}
+      {/call}
 
-    // Add additional mirrors, up to 10 total
-    {foreach $index in [1, 2, 3, 4, 5, 6, 7, 8, 9]}
-        {if $config['mirrorRepoUrl' + $index] or $config['username' + $index]}
-            {call .subview data="all"}
-              {param index: $index /}
-            {/call}
-        {/if}
-    {/foreach}
+      // Add additional mirrors, up to 10 total
+      {foreach $index in [1, 2, 3, 4, 5, 6, 7, 8, 9]}
+          {if $config['mirrorRepoUrl' + $index] or $config['username' + $index]}
+              {call .subview data="all"}
+                {param index: $index /}
+              {/call}
+          {/if}
+      {/foreach}
 
-    // Button to add additional mirrors
-    {call aui.buttons.button}
-        {param id: 'et-add-button' /}
-        {param text: 'Add Mirror' /}
-        {param extraAttributes: 'type=button' /}
-    {/call}
+      // Button to add additional mirrors
+      {call aui.buttons.button}
+          {param id: 'et-add-button' /}
+          {param text: 'Add Mirror' /}
+          {param extraAttributes: 'type=button' /}
+      {/call}
 
-    // Call init method with subview callback
-    <script>
-        require("et/hook/mirror").init(com.englishtown.bitbucket.hook.subview, aui.buttons.button);
-    </script>
+      // Call init method with subview callback
+      <script>
+          require("et/hook/mirror").init(com.englishtown.bitbucket.hook.subview, aui.buttons.button);
+      </script>
+    </div>
 {/template}
 
 /**
@@ -40,7 +42,7 @@
  */
 {template .subview}
     <fieldset class="et-mirror-group">
-        {call aui.form.textField}
+        {call aui.form.textareaField}
             {param id: 'mirrorRepoUrl' + $index /}
             {param value: $config['mirrorRepoUrl' + $index] /}
             {param labelContent}
@@ -48,7 +50,8 @@
             {/param}
             {param isRequired: true /}
             {param descriptionText: getText('mirror-repository-hook.mirrorRepoUrl.description') /}
-            {param extraClasses: 'long et-mirror-repo' /}
+            {param extraClasses: 'et-mirror-repo' /}
+            {param fieldWidth: 'long' /}
             {param errorTexts: $errors ? $errors['mirrorRepoUrl' + $index] : null /}
         {/call}
         {call aui.form.textField}
@@ -58,7 +61,6 @@
                 {getText('mirror-repository-hook.username.label')}
             {/param}
             {param descriptionText: getText('mirror-repository-hook.username.description') /}
-            {param extraClasses: 'long' /}
             {param errorTexts: $errors ? $errors['username' + $index] : null /}
         {/call}
         {call aui.form.passwordField}
@@ -68,10 +70,56 @@
                 {getText('mirror-repository-hook.password.label')}
             {/param}
             {param descriptionText: getText('mirror-repository-hook.password.description') /}
-            {param extraClasses: 'long' /}
             {param errorTexts: $errors ? $errors['password' + $index] : null /}
         {/call}
+        {call aui.form.textareaField}
+            {param id: 'refspec' + $index /}
+            {param value: $config['refspec' + $index] /}
+            {param labelContent}
+                {getText('mirror-repository-hook.refspec.label')}
+            {/param}
+            {param descriptionText: getText('mirror-repository-hook.refspec.description') /}
+            {param fieldWidth: 'long' /}
+            {param errorTexts: $errors ? $errors['refspec' + $index] : null /}
+        {/call}
+        {call aui.form.checkboxField}
+            {param legendContent: '' /}
+            {param fields: [
+                [
+                    'id' : 'tags' + $index,
+                    'labelText': getText('mirror-repository-hook.tags.label'),
+                    'isChecked' : $config['tags' + $index] != false
+                ],
+                [
+                    'id' : 'notes' + $index,
+                    'labelText': getText('mirror-repository-hook.notes.label'),
+                    'isChecked' : $config['notes' + $index] != false
+                ],
+                [
+                    'id' : 'atomic' + $index,
+                    'labelText': getText('mirror-repository-hook.atomic.label'),
+                    'isChecked' : $config['atomic' + $index] != false
+                ]
+            ] /}
+        {/call}
+        {call aui.form.textField}
+            {param id: 'restApiURL' + $index /}
+            {param value: $config['restApiURL' + $index] /}
+            {param labelContent}
+                {getText('mirror-repository-hook.restApiURL.label')}
+            {/param}
+            {param descriptionText: getText('mirror-repository-hook.restApiURL.description') /}
+            {param errorTexts: $errors ? $errors['restApiURL' + $index] : null /}
+        {/call}
+        {call aui.form.passwordField}
+            {param id: 'privateToken' + $index /}
+            {param value: $config['privateToken' + $index] /}
+            {param labelContent}
+                {getText('mirror-repository-hook.privateToken.label')}
+            {/param}
+            {param descriptionText: getText('mirror-repository-hook.privateToken.description') /}
+            {param errorTexts: $errors ? $errors['privateToken' + $index] : null /}
+        {/call}
+
     </fieldset>
 {/template}
-
-

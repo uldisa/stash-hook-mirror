@@ -6,7 +6,7 @@ define('et/hook/mirror', ['jquery', 'exports'], function ($, exports) {
                 var currIndex, index = 0, name, html;
 
                 // Determine the current index from the last password input
-                name = $('div.hook-config-contents input:password').last().attr("name");
+                name = $('div.et-mirror-contents input:password').last().attr("name");
 
                 if (name && name.length >= 8) {
                     currIndex = parseInt(name.substring(8));
@@ -27,8 +27,8 @@ define('et/hook/mirror', ['jquery', 'exports'], function ($, exports) {
         function addRemoveButton() {
             // Select all fieldset groups that don't have a remove button
             var group = $(".et-mirror-group").not(":has(.et-remove-button)");
-            var html = createButton({text: 'Remove', extraClasses: 'et-remove-button add-hook-button', extraAttributes: 'type=button'});
-            group.find('.et-mirror-repo input').after(html);
+            var html = "<div>"+createButton({text: 'Remove', extraClasses: 'et-remove-button add-hook-button', extraAttributes: 'type=button'})+"</div>";
+            group.find('.et-mirror-repo textarea').after(html);
 
             group.find('.et-remove-button').click(function (e) {
                 $(e.currentTarget).parents('.et-mirror-group').remove();
